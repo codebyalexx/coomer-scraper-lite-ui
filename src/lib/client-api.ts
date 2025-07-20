@@ -1,3 +1,5 @@
+"use server";
+
 const API_HOST = process.env.API_HOST;
 
 export async function getArtists() {
@@ -5,20 +7,45 @@ export async function getArtists() {
   return response.json();
 }
 
-export async function getArtist(artistId: string) {
-  const response = await fetch(`${API_HOST}/api/artists/${artistId}`);
+export async function getArtist(
+  artistId: string,
+  {
+    fileOffset = 24,
+    fileLimit = 24,
+    postOffset = 12,
+    postLimit = 12,
+  }: {
+    fileOffset?: number;
+    fileLimit?: number;
+    postOffset?: number;
+    postLimit?: number;
+  } = { fileOffset: 24, fileLimit: 24, postOffset: 12, postLimit: 12 }
+) {
+  const response = await fetch(
+    `${API_HOST}/api/artists/${artistId}?fileOffset=${fileOffset}&fileLimit=${fileLimit}&postOffset=${postOffset}&postLimit=${postLimit}`
+  );
   const json = await response.json();
   return {
     ...json,
     tags: [],
+    profileImages: await artistProfileImages(json),
+    files: await Promise.all(
+      json.files.map(async (file: any) => ({
+        ...file,
+        apiURL: await artistFileURL(json.id, file.id),
+      }))
+    ),
   };
 }
 
-export function artistFileURL(artistId: string, fileId: string): string {
+export async function artistFileURL(
+  artistId: string,
+  fileId: string
+): Promise<string> {
   return `${API_HOST}/api/artists/${artistId}/filestream/${fileId}`;
 }
 
-export function artistProfileImages(artist: any) {
+export async function artistProfileImages(artist: any) {
   return {
     avatar: `https://img.coomer.su/icons/${artist.service}/${artist.identifier}`,
     cover: `https://img.coomer.su/banners/${artist.service}/${artist.identifier}`,

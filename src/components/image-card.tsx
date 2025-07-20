@@ -22,7 +22,7 @@ const ImageCard = ({ fileUrl, alt }: { fileUrl: string; alt: string }) => {
     };
   }, [fileUrl]);
 
-  if (!dimensions.width || !dimensions.height) {
+  if (dimensions.width === 0 || dimensions.height === 0) {
     return <div className="aspect-square bg-gray-200 animate-pulse" />;
   }
 

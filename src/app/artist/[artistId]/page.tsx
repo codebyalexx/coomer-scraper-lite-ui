@@ -1,3 +1,5 @@
+"use client";
+
 import {
   artistFileURL,
   artistProfileImages,
@@ -10,29 +12,65 @@ import {
   CalendarIcon,
   ExternalLinkIcon,
   MapPinIcon,
-  PlayIcon,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
 import { fileTypeByFilename } from "@/lib/utils";
 import ImageCard from "@/components/image-card";
-import { Fragment } from "react";
+import { Fragment, use, useEffect, useState } from "react";
+import DynamicVideoCard from "@/components/video-card";
 
-export default async function ArtistPage({
+export default function ArtistPage({
   params,
 }: {
   params: Promise<{ artistId: string }>;
 }) {
-  const artist = await getArtist((await params).artistId);
-  const images = artist.files.filter(
-    (file: any) => fileTypeByFilename(file.filename) === "image"
-  );
-  const videos = artist.files.filter(
-    (file: any) => fileTypeByFilename(file.filename) === "video"
-  );
+  const { artistId } = use(params);
+
+  console.log(artistId);
+
+  const fileLimit = 24;
+
+  const [fileOffsetState, setFileOffsetState] = useState(0);
+  const [artist, setArtist] = useState<any>(null);
+
+  const fetchArtist = () => {
+    getArtist(artistId, {
+      fileOffset: fileOffsetState,
+      fileLimit,
+    }).then((data: any) => {
+      if (artist) {
+        setArtist({
+          ...data,
+          files: [...artist.files, ...data.files],
+        });
+      } else setArtist(data);
+    });
+  };
+
+  useEffect(() => {
+    fetchArtist();
+  }, [fileOffsetState, artistId]);
+
+  useEffect(() => {
+    fetchArtist();
+    const handleScroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - 50
+      )
+        return;
+      setFileOffsetState((prev) => prev + fileLimit);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [artistId]);
+
+  if (!artist) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -58,7 +96,7 @@ export default async function ArtistPage({
       {/* Cover Image */}
       <div className="relative h-48 md:h-64 overflow-hidden">
         <Image
-          src={artistProfileImages(artist).cover}
+          src={artist.profileImages.cover}
           alt={`${artist.name} cover`}
           fill
           className="object-cover"
@@ -68,11 +106,11 @@ export default async function ArtistPage({
 
       {/* Profile Section */}
       <div className="container mx-auto px-4 -mt-16 relative z-10">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-start md:items-end space-y-4 md:space-y-0 md:space-x-6 mb-8">
             <Avatar className="h-32 w-32 border-4 border-background">
               <AvatarImage
-                src={artistProfileImages(artist).avatar}
+                src={artist.profileImages.avatar}
                 alt={artist.name}
               />
               <AvatarFallback className="text-2xl">
@@ -93,25 +131,8 @@ export default async function ArtistPage({
                 </p>
               </div>
 
-              <div className="flex flex-wrap items-center gap-4 text-sm text-white/80 md:text-muted-foreground">
-                <div className="flex items-center space-x-1">
-                  <MapPinIcon className="h-4 w-4" />
-                  <span>{artist.location}</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <CalendarIcon className="h-4 w-4" />
-                  <span>Joined {artist.joinDate}</span>
-                </div>
-                {artist.website && (
-                  <div className="flex items-center space-x-1">
-                    <ExternalLinkIcon className="h-4 w-4" />
-                    <span>{artist.website}</span>
-                  </div>
-                )}
-              </div>
+              <div className="flex flex-wrap items-center gap-4 text-sm text-white/80 md:text-muted-foreground"></div>
             </div>
-
-            <Button className="md:mb-4">Follow</Button>
           </div>
 
           {/* Stats and Bio */}
@@ -128,23 +149,6 @@ export default async function ArtistPage({
                 ))}
               </div>
             </div>
-
-            <div className="flex md:flex-col gap-6 md:gap-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold">{artist.followers}</div>
-                <div className="text-sm text-muted-foreground">Followers</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold">{artist.following}</div>
-                <div className="text-sm text-muted-foreground">Following</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold">
-                  {images.length + videos.length}
-                </div>
-                <div className="text-sm text-muted-foreground">Works</div>
-              </div>
-            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -152,9 +156,12 @@ export default async function ArtistPage({
               <Fragment key={file.id}>
                 {fileTypeByFilename(file.filename) === "image" && (
                   <ImageCard
-                    fileUrl={artistFileURL(artist.id, file.id)}
+                    fileUrl={file.apiURL}
                     alt={`${artist.name} - ${file.filename}`}
                   />
+                )}
+                {fileTypeByFilename(file.filename) === "video" && (
+                  <DynamicVideoCard fileUrl={file.apiURL} />
                 )}
               </Fragment>
             ))}

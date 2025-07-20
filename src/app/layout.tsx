@@ -19,7 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${figtreeSans.variable} antialiased`}>{children}</body>
+      <body className={`${figtreeSans.variable} antialiased dark`}>
+        {children}
+      </body>
     </html>
   );
 }
