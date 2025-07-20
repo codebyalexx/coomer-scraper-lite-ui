@@ -4,8 +4,22 @@ const nextConfig: NextConfig = {
   /* config options here */
   images: {
     remotePatterns: [
-      new URL(`${process.env.NEXT_PUBLIC_API_HOST}/**`),
-      new URL("https://img.coomer.su/**"),
+      {
+        protocol: process.env.NEXT_PUBLIC_API_HOST?.startsWith("https")
+          ? "https"
+          : "http",
+        hostname: new URL(
+          process.env.NEXT_PUBLIC_API_HOST || "http://localhost"
+        ).hostname,
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "img.coomer.su",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
   typescript: {
