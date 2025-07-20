@@ -21,6 +21,10 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
     ],
+    domains: [
+      "img.coomer.su",
+      new URL(process.env.NEXT_PUBLIC_API_HOST || "http://localhost").hostname,
+    ],
   },
   typescript: {
     ignoreBuildErrors: true,
