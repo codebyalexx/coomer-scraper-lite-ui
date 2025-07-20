@@ -1,20 +1,8 @@
 "use client";
 
-import {
-  artistFileURL,
-  artistProfileImages,
-  getArtist,
-} from "@/lib/client-api";
+import { getArtist } from "@/lib/client-api";
 import Image from "next/image";
-import Link from "next/link";
-import {
-  ArrowLeft,
-  CalendarIcon,
-  ExternalLinkIcon,
-  MapPinIcon,
-} from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { fileTypeByFilename } from "@/lib/utils";
 import ImageCard from "@/components/image-card";
@@ -83,27 +71,7 @@ export default function ArtistPage({
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link
-                href="/"
-                className="flex items-center space-x-2 hover:opacity-80"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                <span className="text-sm font-medium">Back to Feed</span>
-              </Link>
-            </div>
-            <Link href="/" className="text-xl font-bold">
-              ArtistHub
-            </Link>
-          </div>
-        </div>
-      </header>
-
+    <>
       {/* Cover Image */}
       <div className="relative h-48 md:h-64 overflow-hidden">
         <Image
@@ -181,7 +149,7 @@ export default function ArtistPage({
                     />
                   )}
                   {fileTypeByFilename(file.filename) === "video" && (
-                    <DynamicVideoCard fileUrl={file.apiURL} />
+                    <DynamicVideoCard fileUrl={file.apiURL} videoId={file.id} />
                   )}
                 </Fragment>
               ))}
@@ -190,6 +158,6 @@ export default function ArtistPage({
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

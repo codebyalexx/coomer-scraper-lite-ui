@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
 import "./globals.css";
+import { Header } from "@/components/header";
 
 const figtreeSans = Figtree({
   variable: "--font-figtree-sans",
@@ -20,7 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${figtreeSans.variable} antialiased dark`}>
-        {children}
+        <div className="min-h-screen bg-background">
+          <Header />
+          {children}
+        </div>
       </body>
     </html>
   );

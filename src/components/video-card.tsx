@@ -5,8 +5,15 @@ import { Card, CardContent } from "./ui/card";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { ClapperboardIcon, VideoIcon } from "lucide-react";
+import Link from "next/link";
 
-const DynamicVideoCard = ({ fileUrl }: { fileUrl: string }) => {
+const DynamicVideoCard = ({
+  fileUrl,
+  videoId,
+}: {
+  fileUrl: string;
+  videoId: string;
+}) => {
   const [dimensions, setDimensions] = useState({
     width: 0,
     height: 0,
@@ -60,9 +67,12 @@ const DynamicVideoCard = ({ fileUrl }: { fileUrl: string }) => {
       )}
     >
       <CardContent className="p-0 h-full">
-        <div className="flex items-center justify-center h-full">
+        <Link
+          href={`/watch/${videoId}`}
+          className="flex items-center justify-center h-full"
+        >
           <ClapperboardIcon className="w-12 h-12 text-gray-500" />
-        </div>
+        </Link>
       </CardContent>
     </Card>
   );
