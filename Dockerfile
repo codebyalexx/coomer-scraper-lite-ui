@@ -14,6 +14,9 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
+ARG NEXT_PUBLIC_API_HOST
+ENV NEXT_PUBLIC_API_HOST=$NEXT_PUBLIC_API_HOST
+
 RUN pnpm build
 
 ### PRODUCTION
@@ -25,6 +28,9 @@ WORKDIR /app
 RUN apk add --no-cache libc6-compat
 
 RUN npm install -g pnpm@10.11.0
+
+ARG NEXT_PUBLIC_API_HOST
+ENV NEXT_PUBLIC_API_HOST=$NEXT_PUBLIC_API_HOST
 
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
