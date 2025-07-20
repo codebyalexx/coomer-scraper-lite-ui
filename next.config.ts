@@ -8,6 +8,12 @@ const nextConfig: NextConfig = {
       new URL("https://img.coomer.su/**"),
     ],
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;

@@ -2,8 +2,18 @@
 
 import { useSearchParams } from "next/navigation";
 import { WatchInterceptable } from "./WatchInterceptable";
+import { Suspense } from "react";
+import { SuspenseLoader } from "@/components/suspense-loader";
 
 export default function WatchPage() {
+  return (
+    <Suspense fallback={<SuspenseLoader />}>
+      <PageContent />
+    </Suspense>
+  );
+}
+
+function PageContent() {
   const search = useSearchParams();
   const videoURL = search.get("url");
   const isHorizontal = Boolean(search.get("horizontal"));
