@@ -40,7 +40,10 @@ const DynamicVideoCard = ({ fileUrl }: { fileUrl: string }) => {
   // Pendant le chargement des métadonnées, on affiche un placeholder
   if (dimensions.width === 0 || dimensions.height === 0) {
     return (
-      <div className="w-full aspect-video bg-gray-200 rounded-md animate-pulse" />
+      <Link
+        href={`/watch?url=${encodeURIComponent(fileUrl)}`}
+        className="w-full aspect-video bg-gray-200 rounded-md animate-pulse"
+      />
     );
   }
 

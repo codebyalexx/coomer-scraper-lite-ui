@@ -1,8 +1,7 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
-import ReactPlayer from "react-player";
+import { WatchInterceptable } from "./WatchInterceptable";
 
 export default function WatchPage() {
   const search = useSearchParams();
@@ -17,17 +16,7 @@ export default function WatchPage() {
     <>
       <div className="container mx-auto p-4 relative z-10">
         <div className="max-w-7xl mx-auto">
-          <ReactPlayer
-            src={videoURL}
-            controls
-            loop
-            width={"100%"}
-            height={"100%"}
-            className={cn(
-              "rounded-lg max-h-[calc(70vh)]",
-              isHorizontal ? "w-full h-auto" : "h-full w-auto"
-            )}
-          />
+          <WatchInterceptable videoURL={videoURL} isHorizontal={isHorizontal} />
         </div>
       </div>
     </>
