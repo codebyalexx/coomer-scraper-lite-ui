@@ -4,6 +4,18 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "./ui/card";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import { Button } from "./ui/button";
+import Link from "next/link";
 
 const ImageCard = ({ fileUrl, alt }: { fileUrl: string; alt: string }) => {
   const [dimensions, setDimensions] = useState({
@@ -29,24 +41,54 @@ const ImageCard = ({ fileUrl, alt }: { fileUrl: string; alt: string }) => {
   const isHorizontal = dimensions.width > dimensions.height;
 
   return (
-    <Card
-      className={cn(
-        "group overflow-hidden cursor-pointer hover:shadow-lg transition-shadow p-0",
-        isHorizontal ? "aspect-video col-span-2" : "aspect-[4/5]"
-      )}
-    >
-      <CardContent className="p-0">
-        <div className="relative">
+    <Dialog>
+      <DialogTrigger asChild>
+        <Card
+          className={cn(
+            "group overflow-hidden cursor-pointer hover:shadow-lg transition-shadow p-0",
+            isHorizontal ? "aspect-video col-span-2" : "aspect-[4/5]"
+          )}
+        >
+          <CardContent className="p-0">
+            <div className="relative">
+              <Image
+                src={fileUrl}
+                alt={alt}
+                className="object-cover"
+                width={dimensions.width}
+                height={dimensions.height}
+              />
+            </div>
+          </CardContent>
+        </Card>
+      </DialogTrigger>
+      <DialogContent className="!max-w-none w-[calc(100vw-2rem)] h-[calc(100vh-2rem)] p-0 flex flex-col overflow-hidden">
+        <DialogHeader className="p-4">
+          <DialogTitle>{alt.split("-")[1]}</DialogTitle>
+        </DialogHeader>
+
+        <Link
+          href={fileUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-1 w-full flex items-center justify-center overflow-hidden"
+        >
           <Image
             src={fileUrl}
             alt={alt}
-            className="object-cover"
             width={dimensions.width}
             height={dimensions.height}
+            className="w-full h-full object-contain"
           />
-        </div>
-      </CardContent>
-    </Card>
+        </Link>
+
+        <DialogFooter className="p-4">
+          <DialogClose asChild>
+            <Button>Close</Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 
