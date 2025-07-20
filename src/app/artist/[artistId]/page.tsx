@@ -18,8 +18,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { fileTypeByFilename } from "@/lib/utils";
 import ImageCard from "@/components/image-card";
-import { Fragment, use, useEffect, useState } from "react";
+import { Fragment, use, useEffect, useRef, useState } from "react";
 import DynamicVideoCard from "@/components/video-card";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export default function ArtistPage({
   params,
@@ -28,7 +29,7 @@ export default function ArtistPage({
 }) {
   const { artistId } = use(params);
 
-  console.log(artistId);
+  const loaderRef = useRef(null);
 
   const fileLimit = 24;
 
@@ -54,18 +55,28 @@ export default function ArtistPage({
   }, [fileOffsetState, artistId]);
 
   useEffect(() => {
-    fetchArtist();
-    const handleScroll = () => {
-      if (
-        window.innerHeight + document.documentElement.scrollTop >=
-        document.documentElement.offsetHeight - 50
-      )
-        return;
-      setFileOffsetState((prev) => prev + fileLimit);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          console.log("Loading more...");
+          setFileOffsetState((prev) => prev + fileLimit);
+        }
+      },
+      {
+        root: null,
+        rootMargin: "0px 0px 200px 0px",
+        threshold: 0.1,
+      }
+    );
+
+    const loader = loaderRef.current;
+    if (loader) observer.observe(loader);
+
+    return () => {
+      if (loader) observer.unobserve(loader);
     };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [artistId]);
+  }, [loaderRef]);
 
   if (!artist) {
     return <div>Loading...</div>;
@@ -151,20 +162,31 @@ export default function ArtistPage({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {artist.files.map((file: any) => (
-              <Fragment key={file.id}>
-                {fileTypeByFilename(file.filename) === "image" && (
-                  <ImageCard
-                    fileUrl={file.apiURL}
-                    alt={`${artist.name} - ${file.filename}`}
-                  />
-                )}
-                {fileTypeByFilename(file.filename) === "video" && (
-                  <DynamicVideoCard fileUrl={file.apiURL} />
-                )}
-              </Fragment>
-            ))}
+          <div>
+            <InfiniteScroll
+              dataLength={artist.files.length}
+              hasMore={true}
+              next={() => {
+                setFileOffsetState((prev) => prev + fileLimit);
+              }}
+              loader={<div>Loading...</div>}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+              {artist.files.map((file: any) => (
+                <Fragment key={file.id}>
+                  {fileTypeByFilename(file.filename) === "image" && (
+                    <ImageCard
+                      fileUrl={file.apiURL}
+                      alt={`${artist.name} - ${file.filename}`}
+                    />
+                  )}
+                  {fileTypeByFilename(file.filename) === "video" && (
+                    <DynamicVideoCard fileUrl={file.apiURL} />
+                  )}
+                </Fragment>
+              ))}
+              <div style={{ height: "300px" }}></div>
+            </InfiniteScroll>
           </div>
         </div>
       </div>
