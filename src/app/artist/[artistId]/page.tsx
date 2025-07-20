@@ -149,7 +149,7 @@ export default function ArtistPage({
                     />
                   )}
                   {fileTypeByFilename(file.filename) === "video" && (
-                    <DynamicVideoCard fileUrl={file.apiURL} videoId={file.id} />
+                    <DynamicVideoCard fileUrl={file.apiURL} />
                   )}
                 </Fragment>
               ))}

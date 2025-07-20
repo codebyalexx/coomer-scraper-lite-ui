@@ -7,16 +7,11 @@ import { cn } from "@/lib/utils";
 import { ClapperboardIcon, VideoIcon } from "lucide-react";
 import Link from "next/link";
 
-const DynamicVideoCard = ({
-  fileUrl,
-  videoId,
-}: {
-  fileUrl: string;
-  videoId: string;
-}) => {
+const DynamicVideoCard = ({ fileUrl }: { fileUrl: string }) => {
   const [dimensions, setDimensions] = useState({
     width: 0,
     height: 0,
+    duration: 0,
   });
 
   useEffect(() => {
@@ -30,6 +25,7 @@ const DynamicVideoCard = ({
       setDimensions({
         width: video.videoWidth,
         height: video.videoHeight,
+        duration: video.duration,
       });
     };
 
@@ -68,10 +64,15 @@ const DynamicVideoCard = ({
     >
       <CardContent className="p-0 h-full">
         <Link
-          href={`/watch/${videoId}`}
-          className="flex items-center justify-center h-full"
+          href={`/watch?url=${encodeURIComponent(
+            fileUrl
+          )}&horizontal=${isHorizontal}`}
+          className="flex flex-col items-center justify-center gap-2 h-full"
         >
           <ClapperboardIcon className="w-12 h-12 text-gray-500" />
+          <p className="text-sm text-gray-500 font-medium">
+            {dimensions.duration.toFixed(1)}s
+          </p>
         </Link>
       </CardContent>
     </Card>

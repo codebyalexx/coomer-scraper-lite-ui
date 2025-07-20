@@ -1,6 +1,4 @@
-"use server";
-
-const API_HOST = process.env.API_HOST;
+const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
 export async function getArtists() {
   const response = await fetch(`${API_HOST}/api/artists`);
@@ -38,14 +36,11 @@ export async function getArtist(
   };
 }
 
-export async function artistFileURL(
-  artistId: string,
-  fileId: string
-): Promise<string> {
+export function artistFileURL(artistId: string, fileId: string): string {
   return `${API_HOST}/api/artists/${artistId}/filestream/${fileId}`;
 }
 
-export async function artistProfileImages(artist: any) {
+export function artistProfileImages(artist: any) {
   return {
     avatar: `https://img.coomer.su/icons/${artist.service}/${artist.identifier}`,
     cover: `https://img.coomer.su/banners/${artist.service}/${artist.identifier}`,
