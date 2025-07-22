@@ -22,12 +22,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${figtreeSans.variable} antialiased dark`}>
-        <div className="min-h-screen bg-background">
-          <Header />
-          {children}
-          {modal}
-        </div>
+      <body
+        className={`${figtreeSans.variable} antialiased dark min-h-screen bg-background`}
+      >
+        <Header />
+        <div className="bg-background h-full">{children}</div>
+        {modal}
       </body>
     </html>
   );
