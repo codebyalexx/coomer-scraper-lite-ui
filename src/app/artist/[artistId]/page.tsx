@@ -6,9 +6,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { fileTypeByFilename } from "@/lib/utils";
 import ImageCard from "@/components/image-card";
-import { Fragment, use, useEffect, useRef, useState } from "react";
+import { Fragment, use, useEffect, useState } from "react";
 import DynamicVideoCard from "@/components/video-card";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { ArtistSpecific } from "@/types/artists";
 
 export default function ArtistPage({
   params,
@@ -17,18 +18,16 @@ export default function ArtistPage({
 }) {
   const { artistId } = use(params);
 
-  const loaderRef = useRef(null);
-
   const fileLimit = 24;
 
   const [fileOffsetState, setFileOffsetState] = useState(0);
-  const [artist, setArtist] = useState<any>(null);
+  const [artist, setArtist] = useState<ArtistSpecific | null>(null);
 
   const fetchArtist = () => {
     getArtist(artistId, {
       fileOffset: fileOffsetState,
       fileLimit,
-    }).then((data: any) => {
+    }).then((data: ArtistSpecific) => {
       if (artist) {
         setArtist({
           ...data,
@@ -41,30 +40,6 @@ export default function ArtistPage({
   useEffect(() => {
     fetchArtist();
   }, [fileOffsetState, artistId]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (entry.isIntersecting) {
-          console.log("Loading more...");
-          setFileOffsetState((prev) => prev + fileLimit);
-        }
-      },
-      {
-        root: null,
-        rootMargin: "0px 0px 200px 0px",
-        threshold: 0.1,
-      }
-    );
-
-    const loader = loaderRef.current;
-    if (loader) observer.observe(loader);
-
-    return () => {
-      if (loader) observer.unobserve(loader);
-    };
-  }, [loaderRef]);
 
   if (!artist) {
     return <div>Loading...</div>;
@@ -105,9 +80,6 @@ export default function ArtistPage({
                 <h1 className="text-3xl font-bold text-white md:text-foreground">
                   {artist.name}
                 </h1>
-                <p className="text-lg text-white/80 md:text-muted-foreground">
-                  {artist.username}
-                </p>
               </div>
 
               <div className="flex flex-wrap items-center gap-4 text-sm text-white/80 md:text-muted-foreground"></div>
@@ -117,9 +89,6 @@ export default function ArtistPage({
           {/* Stats and Bio */}
           <div className="grid md:grid-cols-3 gap-8 mb-8">
             <div className="md:col-span-2 space-y-4">
-              <p className="text-muted-foreground leading-relaxed">
-                {artist.bio}
-              </p>
               <div className="flex flex-wrap gap-2">
                 {artist.tags.map((tag: string) => (
                   <Badge key={tag} variant="secondary">
