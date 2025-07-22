@@ -3,15 +3,24 @@
 import { Artist } from "@/types/artists";
 import Link from "next/link";
 import { ArtistCard } from "./artist-card";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "./ui/input";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export function ArtistsList({ artists }: { artists: Artist[] }) {
-  const [search, setSearch] = useState("");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const [search, setSearch] = useState(searchParams.get("search") || "");
 
   const filteredArtists = artists.filter((artist) =>
     artist.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  useEffect(() => {
+    router.push(`${pathname}?search=${search}`);
+  }, [search]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
