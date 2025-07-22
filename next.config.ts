@@ -25,6 +25,7 @@ const nextConfig: NextConfig = {
       "img.coomer.su",
       new URL(process.env.NEXT_PUBLIC_API_HOST || "http://localhost").hostname,
     ],
+    minimumCacheTTL: 3600 * 12,
   },
   typescript: {
     ignoreBuildErrors: true,
