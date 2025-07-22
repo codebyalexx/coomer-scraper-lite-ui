@@ -1,11 +1,13 @@
+"use client";
+
 import { artistProfileImages } from "@/lib/client-api";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Card, CardContent, CardHeader } from "./ui/card";
+import { Card, CardHeader } from "./ui/card";
 import Image from "next/image";
 import { Artist } from "@/types/artists";
 
-export async function ArtistCard({ artist }: { artist: Artist }) {
-  const profileImages = await artistProfileImages(artist);
+export function ArtistCard({ artist }: { artist: Artist }) {
+  const profileImages = artistProfileImages(artist);
 
   return (
     <Card className="w-full relative bg-black">
