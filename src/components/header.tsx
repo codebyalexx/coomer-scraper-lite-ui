@@ -7,23 +7,14 @@ export function Header() {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <Link href="/" className="text-2xl font-bold">
-            ArtistHub
+            CSUI
           </Link>
           <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/" className="text-sm font-medium hover:text-primary">
-              Feed
-            </Link>
             <Link
-              href="/discover"
+              href="/sign-in"
               className="text-sm font-medium hover:text-primary"
             >
-              Discover
-            </Link>
-            <Link
-              href="/trending"
-              className="text-sm font-medium hover:text-primary"
-            >
-              Trending
+              Sign In
             </Link>
           </nav>
         </div>

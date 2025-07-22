@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { WatchInterceptable } from "./WatchInterceptable";
 import { Suspense } from "react";
 import { SuspenseLoader } from "@/components/suspense-loader";
+import ClientGuard from "@/components/client-guard";
 
 export default function WatchPage() {
   return (
@@ -24,11 +25,16 @@ function PageContent() {
 
   return (
     <>
-      <div className="container mx-auto p-4 relative z-10">
-        <div className="max-w-7xl mx-auto">
-          <WatchInterceptable videoURL={videoURL} isHorizontal={isHorizontal} />
+      <ClientGuard>
+        <div className="container mx-auto p-4 relative z-10">
+          <div className="max-w-7xl mx-auto">
+            <WatchInterceptable
+              videoURL={videoURL}
+              isHorizontal={isHorizontal}
+            />
+          </div>
         </div>
-      </div>
+      </ClientGuard>
     </>
   );
 }

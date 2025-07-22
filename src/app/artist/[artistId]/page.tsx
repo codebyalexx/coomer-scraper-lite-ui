@@ -10,6 +10,7 @@ import { Fragment, use, useEffect, useState } from "react";
 import DynamicVideoCard from "@/components/video-card";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { ArtistSpecific } from "@/types/artists";
+import ClientGuard from "@/components/client-guard";
 
 export default function ArtistPage({
   params,
@@ -46,7 +47,7 @@ export default function ArtistPage({
   }
 
   return (
-    <>
+    <ClientGuard>
       {/* Cover Image */}
       <div className="relative h-48 md:h-64 overflow-hidden">
         <Image
@@ -127,6 +128,6 @@ export default function ArtistPage({
           </div>
         </div>
       </div>
-    </>
+    </ClientGuard>
   );
 }
