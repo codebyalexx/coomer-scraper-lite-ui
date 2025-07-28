@@ -15,6 +15,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { getArtists } from "@/lib/client-api";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "./ui/pagination";
 
 export function ArtistsList({ artists }: { artists: Artist[] }) {
   const router = useRouter();
@@ -25,6 +35,7 @@ export function ArtistsList({ artists }: { artists: Artist[] }) {
   const [orderBy, setOrderBy] = useState(
     searchParams.get("orderBy") || "createdAt-asc"
   );
+  const [page, setPage] = useState(parseInt(searchParams.get("page") || "0"));
 
   const handleSortChange = (value: string) => {
     const [field, direction] = value.split("-");
@@ -67,9 +78,16 @@ export function ArtistsList({ artists }: { artists: Artist[] }) {
       return 0;
     });
 
+  const totalPages = Math.ceil(filteredArtists.length / 15);
+  const paginatedArtists = filteredArtists.slice(page * 15, page * 15 + 15);
+
   useEffect(() => {
-    router.push(`${pathname}?search=${search}`);
-  }, [search]);
+    router.push(`${pathname}?search=${search}&orderBy=${orderBy}&page=${page}`);
+  }, [search, orderBy, page]);
+
+  useEffect(() => {
+    setPage(Math.max(0, Math.min(page, totalPages - 1)));
+  }, [page]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -86,11 +104,24 @@ export function ArtistsList({ artists }: { artists: Artist[] }) {
           <div className="w-fit">...</div>
         </div>
       </div>
-      {filteredArtists.map((artist: any) => (
+      {paginatedArtists.map((artist: any) => (
         <Link key={artist.id} href={`/artist/${artist.id}`}>
           <ArtistCard artist={artist} />
         </Link>
       ))}
+      <Pagination className="w-full md:col-span-2 lg:col-span-3 space-y-2">
+        <PaginationContent className="w-full justify-between">
+          <PaginationItem onClick={() => setPage(page - 1)}>
+            <PaginationPrevious href="#" />
+          </PaginationItem>
+          <p>
+            {page + 1} / {totalPages}
+          </p>
+          <PaginationItem onClick={() => setPage(page + 1)}>
+            <PaginationNext href="#" />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 }

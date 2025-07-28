@@ -2,12 +2,23 @@ import { Artist, ArtistFile, ArtistSpecific } from "@/types/artists";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
-export async function getArtists(): Promise<Artist[]> {
-  const response = await fetch(`${API_HOST}/api/artists`, {
-    next: {
-      revalidate: 1800,
-    },
-  });
+export async function getArtists(
+  {
+    offset = 0,
+    limit = 15,
+  }: {
+    offset?: number;
+    limit?: number;
+  } = { offset: 0, limit: 15 }
+): Promise<Artist[]> {
+  const response = await fetch(
+    `${API_HOST}/api/artists?offset=${offset}&limit=${limit}`,
+    {
+      next: {
+        revalidate: 1800,
+      },
+    }
+  );
   return response.json();
 }
 
@@ -41,14 +52,14 @@ export async function getArtist(
     files: await Promise.all(
       json.files.map(async (file: ArtistFile) => ({
         ...file,
-        apiURL: await artistFileURL(json.id, file.id),
+        apiURL: apiFileURL(file.id),
       }))
     ),
   };
 }
 
-export function artistFileURL(artistId: string, fileId: string): string {
-  return `${API_HOST}/api/artists/${artistId}/filestream/${fileId}`;
+export function apiFileURL(fileId: string): string {
+  return `${API_HOST}/api/files/${fileId}/stream`;
 }
 
 export function artistProfileImages(artist: Artist | ArtistSpecific) {

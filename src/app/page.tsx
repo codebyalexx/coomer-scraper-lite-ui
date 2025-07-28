@@ -3,7 +3,8 @@ import ClientGuard from "@/components/client-guard";
 import { getArtists } from "@/lib/client-api";
 
 export default async function Home() {
-  const artists = await getArtists();
+  const artists = await getArtists({ limit: 999 });
+
   return (
     <>
       <ClientGuard>
