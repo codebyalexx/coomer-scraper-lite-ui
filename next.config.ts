@@ -16,13 +16,13 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "img.coomer.su",
+        hostname: "img.coomer.st",
         port: "",
         pathname: "/**",
       },
     ],
     domains: [
-      "img.coomer.su",
+      "img.coomer.st",
       new URL(process.env.NEXT_PUBLIC_API_HOST || "http://localhost").hostname,
     ],
     minimumCacheTTL: 3600 * 12,

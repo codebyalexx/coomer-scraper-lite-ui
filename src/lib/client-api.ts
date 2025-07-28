@@ -53,7 +53,7 @@ export function artistFileURL(artistId: string, fileId: string): string {
 
 export function artistProfileImages(artist: Artist | ArtistSpecific) {
   return {
-    avatar: `https://img.coomer.su/icons/${artist.service}/${artist.identifier}`,
-    cover: `https://img.coomer.su/banners/${artist.service}/${artist.identifier}`,
+    avatar: `https://img.coomer.st/icons/${artist.service}/${artist.identifier}`,
+    cover: `https://img.coomer.st/banners/${artist.service}/${artist.identifier}`,
   };
 }
