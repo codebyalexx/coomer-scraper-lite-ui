@@ -3,9 +3,10 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "./ui/card";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
+import { cn, fileRoutes } from "@/lib/utils";
 import { ClapperboardIcon, VideoIcon } from "lucide-react";
 import Link from "next/link";
+import { Badge } from "./ui/badge";
 
 const DynamicVideoCard = ({ fileUrl }: { fileUrl: string }) => {
   const [dimensions, setDimensions] = useState({
@@ -77,6 +78,87 @@ const DynamicVideoCard = ({ fileUrl }: { fileUrl: string }) => {
             {dimensions.duration.toFixed(1)}s
           </p>
         </Link>
+      </CardContent>
+    </Card>
+  );
+};
+
+export const ThumbVideoCard = ({ id }: { id: string }) => {
+  const { thumbnail, watch, stream } = fileRoutes(id);
+
+  const [dimensions, setDimensions] = useState({
+    width: 0,
+    height: 0,
+    duration: 0,
+  });
+
+  useEffect(() => {
+    const img = new window.Image();
+    img.src = thumbnail;
+    img.onload = () => {
+      setDimensions((prev) => ({
+        ...prev,
+        width: img.naturalWidth,
+        height: img.naturalHeight,
+      }));
+    };
+  }, [thumbnail]);
+
+  useEffect(() => {
+    // 1. On crée un élément video
+    const video = document.createElement("video");
+    video.src = stream;
+
+    // 2. On écoute l'événement 'loadedmetadata'
+    const handleMetadataLoaded = () => {
+      // 3. On met à jour l'état avec les dimensions
+      setDimensions((prev) => ({
+        ...prev,
+        duration: video.duration,
+      }));
+    };
+
+    video.addEventListener("loadedmetadata", handleMetadataLoaded);
+
+    // Fonction de nettoyage pour éviter les fuites de mémoire
+    return () => {
+      video.removeEventListener("loadedmetadata", handleMetadataLoaded);
+    };
+  }, [stream]);
+
+  if (dimensions.width === 0 || dimensions.height === 0) {
+    return <div className="aspect-square bg-gray-200 animate-pulse" />;
+  }
+
+  const isHorizontal = dimensions.width > dimensions.height;
+
+  return (
+    <Card
+      className={cn(
+        "group overflow-hidden cursor-pointer hover:shadow-lg transition-shadow p-0 border-4 border-white",
+        isHorizontal ? "aspect-video col-span-2" : "aspect-[4/5]"
+      )}
+    >
+      <CardContent className="p-0 overflow-hidden relative">
+        <div className="overflow-hidden">
+          <Link
+            href={watch}
+            className="block w-full h-full relative overflow-hidden"
+          >
+            <div className="absolute top-2 right-2 flex items-center gap-2">
+              <Badge variant={"secondary"}>
+                {dimensions.duration.toFixed(1)}s
+              </Badge>
+            </div>
+            <Image
+              src={thumbnail}
+              alt={id}
+              className="object-cover"
+              width={dimensions.width}
+              height={dimensions.height}
+            />
+          </Link>
+        </div>
       </CardContent>
     </Card>
   );

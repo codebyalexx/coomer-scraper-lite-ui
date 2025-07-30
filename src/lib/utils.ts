@@ -32,3 +32,12 @@ export function fileTypeByFilename(filename: string): string {
       return "unknown";
   }
 }
+
+export function fileRoutes(id: string) {
+  return {
+    infos: `${process.env.NEXT_PUBLIC_API_HOST}/api/files/${id}`,
+    stream: `${process.env.NEXT_PUBLIC_API_HOST}/api/files/${id}/stream`,
+    thumbnail: `${process.env.NEXT_PUBLIC_API_HOST}/api/files/${id}/thumbnail`,
+    watch: `/watch?v=${id}`,
+  };
+}

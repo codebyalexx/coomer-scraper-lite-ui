@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { fileTypeByFilename } from "@/lib/utils";
 import ImageCard from "@/components/image-card";
 import { Fragment, use, useEffect, useState } from "react";
-import DynamicVideoCard from "@/components/video-card";
+import DynamicVideoCard, { ThumbVideoCard } from "@/components/video-card";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { ArtistSpecific } from "@/types/artists";
 import ClientGuard from "@/components/client-guard";
@@ -119,7 +119,7 @@ export default function ArtistPage({
                     />
                   )}
                   {fileTypeByFilename(file.filename) === "video" && (
-                    <DynamicVideoCard fileUrl={file.apiURL} />
+                    <ThumbVideoCard id={file.id} />
                   )}
                 </Fragment>
               ))}

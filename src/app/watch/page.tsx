@@ -5,6 +5,7 @@ import { WatchInterceptable } from "./WatchInterceptable";
 import { Suspense } from "react";
 import { SuspenseLoader } from "@/components/suspense-loader";
 import ClientGuard from "@/components/client-guard";
+import { fileRoutes } from "@/lib/utils";
 
 export default function WatchPage() {
   return (
@@ -16,22 +17,21 @@ export default function WatchPage() {
 
 function PageContent() {
   const search = useSearchParams();
-  const videoURL = search.get("url");
+  const videoID = search.get("v");
   const isHorizontal = Boolean(search.get("horizontal"));
 
-  if (!videoURL) {
-    return <div>Video URL not found</div>;
+  if (!videoID) {
+    return <div>Video ID not found</div>;
   }
+
+  const { stream } = fileRoutes(videoID);
 
   return (
     <>
       <ClientGuard>
         <div className="container mx-auto p-4 relative z-10">
           <div className="max-w-7xl mx-auto">
-            <WatchInterceptable
-              videoURL={videoURL}
-              isHorizontal={isHorizontal}
-            />
+            <WatchInterceptable videoURL={stream} isHorizontal={isHorizontal} />
           </div>
         </div>
       </ClientGuard>

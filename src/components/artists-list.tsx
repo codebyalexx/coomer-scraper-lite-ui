@@ -87,7 +87,7 @@ export function ArtistsList({ artists }: { artists: Artist[] }) {
 
   useEffect(() => {
     setPage(Math.max(0, Math.min(page, totalPages - 1)));
-  }, [page]);
+  }, [page, totalPages]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

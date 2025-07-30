@@ -3,17 +3,20 @@
 import { WatchInterceptable } from "@/app/watch/WatchInterceptable";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { fileRoutes } from "@/lib/utils";
 
 export function WatchModal() {
   const router = useRouter();
   const pathname = usePathname();
   const search = useSearchParams();
-  const videoURL = search.get("url");
+  const videoID = search.get("v");
   const isHorizontal = Boolean(search.get("horizontal"));
 
-  if (!videoURL) {
-    return <div>Video URL not found</div>;
+  if (!videoID) {
+    return <div>Video ID not found</div>;
   }
+
+  const { stream } = fileRoutes(videoID);
 
   return (
     <Dialog
@@ -23,7 +26,7 @@ export function WatchModal() {
       }}
     >
       <DialogContent className="max-w-lg">
-        <WatchInterceptable videoURL={videoURL} isHorizontal={isHorizontal} />
+        <WatchInterceptable videoURL={stream} isHorizontal={isHorizontal} />
       </DialogContent>
     </Dialog>
   );
