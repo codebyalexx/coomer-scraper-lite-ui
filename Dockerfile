@@ -18,6 +18,8 @@ ARG NEXT_PUBLIC_API_HOST
 ENV NEXT_PUBLIC_API_HOST=$NEXT_PUBLIC_API_HOST
 
 RUN pnpm build
+RUN pnpm dlx @better-auth/cli@latest generate
+RUN pnpm dlx @better-auth/cli@latest migrate
 
 ### PRODUCTION
 
@@ -28,6 +30,9 @@ WORKDIR /app
 RUN apk add --no-cache libc6-compat
 
 RUN npm install -g pnpm@10.11.0
+
+RUN pnpm dlx @better-auth/cli@latest generate
+RUN pnpm dlx @better-auth/cli@latest migrate
 
 ARG NEXT_PUBLIC_API_HOST
 ENV NEXT_PUBLIC_API_HOST=$NEXT_PUBLIC_API_HOST
