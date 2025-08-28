@@ -30,7 +30,8 @@ export const ToggleArtistExceptionBtn = ({
     startTransition(async () => {
       try {
         await toggleArtistException(artistId, !isException);
-        setIsException(!isException);
+        const artist = await getArtist(artistId);
+        setIsException(artist.isException);
       } catch (error) {
         console.error(error);
         alert("Error occured toggling exception. Code 3");
