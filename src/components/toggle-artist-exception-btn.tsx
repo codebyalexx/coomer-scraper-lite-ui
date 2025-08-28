@@ -44,8 +44,8 @@ export const ToggleArtistExceptionBtn = ({
       className={cn(
         "",
         isLoading && "loading!",
-        isException && "bg-red-500",
-        !isException && "bg-green-500"
+        !isException && "bg-red-500",
+        isException && "bg-green-500"
       )}
     >
       {isException && !isLoading ? "Exception" : "Not Exception"}
