@@ -66,6 +66,9 @@ export async function toggleArtistException(
     `${API_HOST}/api/artists/${artistId}/exception`,
     {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({ isException }),
     }
   );
