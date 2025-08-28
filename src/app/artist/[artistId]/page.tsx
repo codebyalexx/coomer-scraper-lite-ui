@@ -11,6 +11,7 @@ import DynamicVideoCard, { ThumbVideoCard } from "@/components/video-card";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { ArtistSpecific } from "@/types/artists";
 import ClientGuard from "@/components/client-guard";
+import { ToggleArtistExceptionBtn } from "@/components/toggle-artist-exception-btn";
 
 export default function ArtistPage({
   params,
@@ -84,6 +85,20 @@ export default function ArtistPage({
               </div>
 
               <div className="flex flex-wrap items-center gap-4 text-sm text-white/80 md:text-muted-foreground"></div>
+            </div>
+          </div>
+
+          <div>
+            <ToggleArtistExceptionBtn artistId={artist.id} />
+          </div>
+
+          <div>
+            <div className="flex flex-wrap gap-2">
+              {artist.tags.map((tag: string) => (
+                <Badge key={tag} variant="secondary">
+                  {tag}
+                </Badge>
+              ))}
             </div>
           </div>
 

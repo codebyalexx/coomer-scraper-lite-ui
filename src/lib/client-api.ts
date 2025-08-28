@@ -58,6 +58,21 @@ export async function getArtist(
   };
 }
 
+export async function toggleArtistException(
+  artistId: string,
+  isException: boolean
+): Promise<void> {
+  const response = await fetch(
+    `${API_HOST}/api/artists/${artistId}/exception`,
+    {
+      method: "POST",
+      body: JSON.stringify({ isException }),
+    }
+  );
+  const data = await response.json();
+  return data;
+}
+
 export function apiFileURL(fileId: string): string {
   return `${API_HOST}/api/files/${fileId}/stream`;
 }
