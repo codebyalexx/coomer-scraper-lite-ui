@@ -8,7 +8,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -39,7 +38,7 @@ const ImageCard = ({ fileUrl, alt }: { fileUrl: string; alt: string }) => {
     return <div className="aspect-square bg-gray-200 animate-pulse" />;
   }
 
-  const isHorizontal = dimensions.width > dimensions.height;
+  //const isHorizontal = dimensions.width > dimensions.height;
 
   return (
     <Dialog>
@@ -47,7 +46,8 @@ const ImageCard = ({ fileUrl, alt }: { fileUrl: string; alt: string }) => {
         <Card
           className={cn(
             "group overflow-hidden cursor-pointer hover:shadow-lg transition-shadow p-0",
-            isHorizontal ? "aspect-video col-span-2" : "aspect-[4/5]"
+            //isHorizontal ? "aspect-video col-span-2" : "aspect-[4/5]"
+            "aspect-square"
           )}
         >
           <CardContent className="p-0">

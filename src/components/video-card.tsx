@@ -137,7 +137,8 @@ export const ThumbVideoCard = ({ id }: { id: string }) => {
     <Card
       className={cn(
         "group overflow-hidden cursor-pointer hover:shadow-lg transition-shadow p-0 border-4 border-white",
-        isHorizontal ? "aspect-video col-span-2" : "aspect-[4/5]"
+        //isHorizontal ? "aspect-video col-span-2" : "aspect-[4/5]"
+        "aspect-square"
       )}
     >
       <CardContent className="p-0 overflow-hidden relative">

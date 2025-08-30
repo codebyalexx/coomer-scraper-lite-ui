@@ -61,8 +61,8 @@ export default function ArtistPage({
       </div>
 
       {/* Profile Section */}
-      <div className="container mx-auto px-4 -mt-16 relative z-10">
-        <div className="max-w-7xl mx-auto">
+      <div className="mx-auto px-4 lg:px-36 -mt-16 relative z-10">
+        <div className="max-w-full mx-auto">
           <div className="flex flex-col md:flex-row items-start md:items-end space-y-4 md:space-y-0 md:space-x-6 mb-8">
             <Avatar className="h-32 w-32 border-4 border-background">
               <AvatarImage
@@ -123,7 +123,7 @@ export default function ArtistPage({
                 setFileOffsetState((prev) => prev + fileLimit);
               }}
               loader={<div>Loading...</div>}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6"
             >
               {artist.files.map((file: any) => (
                 <Fragment key={file.id}>

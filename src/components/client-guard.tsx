@@ -15,7 +15,16 @@ export default function ClientGuard({
     return <>{children}</>;
   }
 
+  if (
+    typeof window !== "undefined" &&
+    window.location.hostname === "localhost"
+  ) {
+    return <>{children}</>;
+  }
+
   const { data: session, isPending, error } = authClient.useSession();
+
+  if (error) return "An error occured :(";
 
   if (isPending)
     return (
