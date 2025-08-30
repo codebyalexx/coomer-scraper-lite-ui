@@ -16,6 +16,7 @@ import {
 } from "./ui/dialog";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import { csapiImageLoader } from "@/lib/csapi-image-loader";
 
 const ImageCard = ({ fileUrl, alt }: { fileUrl: string; alt: string }) => {
   const [dimensions, setDimensions] = useState({
@@ -52,6 +53,7 @@ const ImageCard = ({ fileUrl, alt }: { fileUrl: string; alt: string }) => {
           <CardContent className="p-0">
             <div className="relative">
               <Image
+                loader={csapiImageLoader}
                 src={fileUrl}
                 alt={alt}
                 className="object-cover"
@@ -74,6 +76,7 @@ const ImageCard = ({ fileUrl, alt }: { fileUrl: string; alt: string }) => {
           className="flex-1 w-full flex items-center justify-center overflow-hidden"
         >
           <Image
+            loader={csapiImageLoader}
             src={fileUrl}
             alt={alt}
             width={dimensions.width}

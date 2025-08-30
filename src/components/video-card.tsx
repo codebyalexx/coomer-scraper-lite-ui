@@ -7,6 +7,7 @@ import { cn, fileRoutes } from "@/lib/utils";
 import { ClapperboardIcon, VideoIcon } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "./ui/badge";
+import { csapiImageLoader } from "@/lib/csapi-image-loader";
 
 const DynamicVideoCard = ({ fileUrl }: { fileUrl: string }) => {
   const [dimensions, setDimensions] = useState({
@@ -151,6 +152,7 @@ export const ThumbVideoCard = ({ id }: { id: string }) => {
               </Badge>
             </div>
             <Image
+              loader={csapiImageLoader}
               src={thumbnail}
               alt={id}
               className="object-cover"
