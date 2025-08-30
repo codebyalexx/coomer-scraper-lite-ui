@@ -15,6 +15,12 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
       {
+        protocol: "http",
+        hostname: "csapi.local",
+        port: "",
+        pathname: "/**",
+      },
+      {
         protocol: "https",
         hostname: "img.coomer.st",
         port: "",
@@ -24,6 +30,7 @@ const nextConfig: NextConfig = {
     domains: [
       "img.coomer.st",
       new URL(process.env.NEXT_PUBLIC_API_HOST || "http://localhost").hostname,
+      "csapi.local",
     ],
     minimumCacheTTL: 3600 * 12,
   },

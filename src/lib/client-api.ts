@@ -1,6 +1,14 @@
 import { Artist, ArtistFile, ArtistSpecific } from "@/types/artists";
 
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
+let FINAL_API_HOST = API_HOST;
+
+if (
+  typeof window !== "undefined" &&
+  window.location.hostname === "csui.local"
+) {
+  FINAL_API_HOST = "http://csapi.local";
+}
 
 export async function getArtists(
   {
@@ -12,7 +20,7 @@ export async function getArtists(
   } = { offset: 0, limit: 15 }
 ): Promise<Artist[]> {
   const response = await fetch(
-    `${API_HOST}/api/artists?offset=${offset}&limit=${limit}`,
+    `${FINAL_API_HOST}/api/artists?offset=${offset}&limit=${limit}`,
     {
       next: {
         revalidate: 1800,
@@ -37,7 +45,7 @@ export async function getArtist(
   } = { fileOffset: 24, fileLimit: 24, postOffset: 12, postLimit: 12 }
 ): Promise<ArtistSpecific> {
   const response = await fetch(
-    `${API_HOST}/api/artists/${artistId}?fileOffset=${fileOffset}&fileLimit=${fileLimit}&postOffset=${postOffset}&postLimit=${postLimit}`,
+    `${FINAL_API_HOST}/api/artists/${artistId}?fileOffset=${fileOffset}&fileLimit=${fileLimit}&postOffset=${postOffset}&postLimit=${postLimit}`,
     {
       next: {
         revalidate: 900,
@@ -63,7 +71,7 @@ export async function toggleArtistException(
   isException: boolean
 ): Promise<void> {
   const response = await fetch(
-    `${API_HOST}/api/artists/${artistId}/exception`,
+    `${FINAL_API_HOST}/api/artists/${artistId}/exception`,
     {
       method: "POST",
       headers: {
@@ -77,7 +85,7 @@ export async function toggleArtistException(
 }
 
 export function apiFileURL(fileId: string): string {
-  return `${API_HOST}/api/files/${fileId}/stream`;
+  return `${FINAL_API_HOST}/api/files/${fileId}/stream`;
 }
 
 export function artistProfileImages(artist: Artist | ArtistSpecific) {

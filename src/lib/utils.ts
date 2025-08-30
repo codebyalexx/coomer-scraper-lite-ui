@@ -34,10 +34,18 @@ export function fileTypeByFilename(filename: string): string {
 }
 
 export function fileRoutes(id: string) {
+  let host = process.env.NEXT_PUBLIC_API_HOST;
+  if (
+    typeof window !== "undefined" &&
+    window.location.hostname === "csui.local"
+  ) {
+    host = "http://csapi.local";
+  }
+
   return {
-    infos: `${process.env.NEXT_PUBLIC_API_HOST}/api/files/${id}`,
-    stream: `${process.env.NEXT_PUBLIC_API_HOST}/api/files/${id}/stream`,
-    thumbnail: `${process.env.NEXT_PUBLIC_API_HOST}/api/files/${id}/thumbnail`,
+    infos: `${host}/api/files/${id}`,
+    stream: `${host}/api/files/${id}/stream`,
+    thumbnail: `${host}/api/files/${id}/thumbnail`,
     watch: `/watch?v=${id}`,
   };
 }
